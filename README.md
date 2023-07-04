@@ -34,7 +34,7 @@ note of docker learn
   可以通过Dockerfile构建，常用指令：
   |command|mean|
   |--|--|
-    |FROM|
+    |FROM|定义基础镜像|
     MAINTAINER：
     RUN：
     ADD：
