@@ -20,11 +20,23 @@ note of docker learn
 
   包含以下三部分：
   
-    *客户端
+    * 客户端
         Docker的构建、拉取和启动
         可以基于Dockerfile构建镜像
         可以从镜像库拉取镜像 docker pull
-    *Docker主机
+    * Docker主机
         包括服务器、容器、镜像
         获取镜像并基于镜像运行出对应容器
-    *镜像仓库
+    * 镜像仓库
+
+  ### Images
+  镜像是一个只读模板。用于构建容器。
+  可以通过Dockerfile构建，常用指令：
+  |command|mean|
+  |--|--|
+    |FROM|
+    MAINTAINER：
+    RUN：
+    ADD：
+    ENV：
+    CMD：
