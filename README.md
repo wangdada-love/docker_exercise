@@ -40,3 +40,9 @@ note of docker learn
   |ADD|添加文件/目录
   |ENV|环境变量
   |CMD|运行进程
+
+  ### Container
+  容器是一个镜像的运行实例。
+
+  
+  
