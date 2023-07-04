@@ -33,7 +33,7 @@ note of docker learn
   镜像是一个只读模板。用于构建容器。
   可以通过Dockerfile构建，常用指令：
   |command|mean|
-  |--|--|
+  | -- | -- |
     |FROM|定义基础镜像|
     MAINTAINER：
     RUN：
