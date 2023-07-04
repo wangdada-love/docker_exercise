@@ -24,7 +24,6 @@ note of docker learn
         Docker的构建、拉取和启动
         可以基于Dockerfile构建镜像
         可以从镜像库拉取镜像 docker pull
-        
     *Docker主机
         包括服务器、容器、镜像
         获取镜像并基于镜像运行出对应容器
