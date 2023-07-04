@@ -19,8 +19,9 @@ note of docker learn
   ## Docker平台组成
 
   包含以下三部分：
-    * 客户端
+  
+    *客户端
         Docker的构建、拉取和启动
-    * Docker主机
+    *Docker主机
         包括服务器、容器、镜像
-    * 镜像仓库
+    *镜像仓库
