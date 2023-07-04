@@ -35,8 +35,8 @@ note of docker learn
   |command|mean|
   |:--:|:---|
   |FROM|定义基础镜像|
-    MAINTAINER：
-    RUN：
-    ADD：
-    ENV：
-    CMD：
+  |MAINTAINER|作者
+  |RUN|运行Linux指令
+  |ADD|添加文件/目录
+  |ENV|环境变量
+  |CMD|运行进程
