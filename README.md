@@ -44,5 +44,12 @@ note of docker learn
   ### Container
   容器是一个镜像的运行实例。
 
+# docker安装
+[官方安装文档](https://docs.docker.com/desktop/install/ubuntu/)
+
+
+
+
+* docker镜像一般存储位置为：/var/lib/docker
   
   
