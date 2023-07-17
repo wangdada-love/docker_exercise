@@ -57,7 +57,7 @@ note of docker learn
   |docker build|使用Dockerfile构建镜像|
   |docker search ImageName|从dockerhub中查找包含指定名字的镜像|
   |docker pull ImageName|从docker hub拉取指定镜像|
-  |docker run|借助镜像文件生成容器|
+  |docker run ImageName/ID|运行镜像文件生成容器|-d： 后天运行容器<br>-p： -p 宿主机端口:容器内端口,将宿主机端口映射到容器端口，容器内访问该端口就相当与访问宿主机的对应端口
   |docker images/image ls|查看本地镜像|
   |docker rmi ImageName/ID|删除指定镜像|
   |CMD|运行进程
