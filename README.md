@@ -11,9 +11,9 @@ note of docker learn
   C/S架构
   docker客户端命令行 - API接口 - 服务器端docker进程（Server Docker Daemon）
   可对网络、容器、镜像、数据卷进行管理。
-  ## Docker Daemon
+  ## Docker Daemon（守护进程）
   安装使用docker，需要先运行docker daemon进程，用于管理docker
-  ## Docker Client
+  ## Docker Client（客户端）
   客户端使用REST API 和 Docker Daemon 进行访问
 
   ## Docker平台组成
@@ -40,16 +40,28 @@ note of docker learn
   |ADD|添加文件/目录
   |ENV|环境变量
   |CMD|运行进程
-
+  
+* linux中，docker镜像一般存储位置为：/var/lib/docker
   ### Container
   容器是一个镜像的运行实例。
 
 # docker安装
 [官方安装文档](https://docs.docker.com/desktop/install/ubuntu/)
 
+# docker指令
+
+  |command|mean|options
+  |:--:|:---|:-----------------
+  |docker build|使用Dockerfile构建镜像|
+  |docker search ImageName|从dockerhub中查找包含指定名字的镜像|
+  |docker pull ImageName|从docker hub拉取指定镜像|
+  |docker run|借助镜像文件生成容器|
+  |ADD|添加文件/目录
+  |ENV|环境变量
+  |CMD|运行进程
 
 
 
-* docker镜像一般存储位置为：/var/lib/docker
+
   
   
