@@ -51,9 +51,18 @@ note of docker learn
 [官方安装文档](https://docs.docker.com/desktop/install/ubuntu/)
 
 # docker指令
-**Dockerfile** ->build-> **images** ->run-> **containers**  
-                                    ->save->**backup.tar**
-                                    ->push->**docker registry**
+
+```mermaid
+graph LR 
+  file[Dockerfile] --build--> image[images]
+  image --run---> con[containers]  
+  image --save--->tar[backup.tar]
+  image --push--->hub[docker registry]
+  image--tag--->image
+  con -.commit.->image
+  con --stop/start/restart--->con
+
+```
 
   |command|mean|options
   |:--:|:---|:-----------------
