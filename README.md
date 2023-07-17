@@ -1,3 +1,5 @@
+**<br>: markdown换行符号**
+
 # docker_exercise
 note of docker learn
 
@@ -56,8 +58,8 @@ note of docker learn
   |docker search ImageName|从dockerhub中查找包含指定名字的镜像|
   |docker pull ImageName|从docker hub拉取指定镜像|
   |docker run|借助镜像文件生成容器|
-  |ADD|添加文件/目录
-  |ENV|环境变量
+  |docker images/image ls|查看本地镜像|
+  |docker rmi ImageName/ID|删除指定镜像|
   |CMD|运行进程
 
 
