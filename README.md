@@ -58,12 +58,13 @@ graph LR
   image --run---> con[containers]  
   image --save--->tar[backup.tar]
   image --push--->hub[docker registry]
+
+
+
+```
   image--tag--->image
   con -.commit.->image
   con --stop/start/restart--->con
-
-```
-
   |command|mean|options
   |:--:|:---|:-----------------
   |docker build|使用Dockerfile构建镜像|
