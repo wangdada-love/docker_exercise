@@ -88,3 +88,37 @@ graph LR
 
   
   
+# docker指令
+
+## docker生命周期
+![docker 生命周期](image.png)
+
+|command|mean|
+|:--------|:-------|
+|docker search name|查找docker hub中存在的指定name的镜像|
+|docker pull name|从docker hub拉取指定名称的镜像
+|docker push name|将本地镜像推送到docker hub
+|docker commit **containerID**|当本地对容器内进行改变时（如安装了某些软件）即可使用commit命令进行提交，提交之后生成的镜像就是携带着你所安装软件的系统镜像
+|docker images / docker image ls|查看本地镜像
+|docker rmi imageID|删除指定ID对应的镜像
+|docker run [-options] imageName/imageID |运行指定docker镜像，参数：docker -d -p 宿主机端口：容器端口 imageName
+|docker ps|查看正在运行中的容器
+|docker stop imageName/imageID|停止指定ID的容器运行， 返回ID号
+|docker start imageName/imageID|运行指定ID的容器， 返回ID号
+|docker restart imageName/imageID|运行指定ID的容器， 返回ID号
+|docker build .|构建dockerfile生成镜像，当前目录下需要存在一个Dockerfile
+|docker save|导出镜像【本地】:用于与他人之间传递镜像文件
+|docker load|导入镜像【本地】:用于与他人之间传递镜像文件
+
+
+## docker run
+    docker run [-options] imageName/imageID
+
+  ### 参数
+
+    -d  后台运行
+    -p  localhost:containerhost 将指定宿主机端口映射到指定容器端口
+
+  ### 返回值
+    返回一个容器的id。
+
