@@ -73,14 +73,15 @@ graph LR
   |docker pull ImageName|从docker hub拉取指定镜像|
   |docker commit **containerID**|当本地对容器内进行改变时（如安装了某些软件）即可使用commit命令进行提交，提交之后生成的镜像就是携带着你所安装软件的系统镜像|
   |docker push ImageName/ID|将Image推到dockerhub|
-  |docker images/image ls|查看本地镜像|
+  |docker images/image ls|查看本地镜像|-q 只列出ImageID<br> --format 格式化输出，如：docker images --format "{{.ID}}--{{.Repository}}" 只列出镜像的ID和仓库.中间用双横杠连接<br> --format "table {{.ID}}\t{{.Repository}}\t{{.Tag}}" 以表格形式展示
   |docker rmi ImageName/ID|删除指定镜像|
+  |docker rm ContainerID|删除容器记录|
   |docker save ImageNaem/ID|将Image文件保存为.tar文件，方便线下内部传播|
   |docker load ***.tar|将.tar文件加载为Image文件|
   |docker tag||
   |docker run ImageName/ID|运行镜像文件生成容器|-d： 后台运行容器<br>-p： -p 宿主机端口:容器内端口,将宿主机端口映射到容器端口，容器内访问该端口就相当与访问宿主机的对应端口
   |docker exec [-options] ContainerID command|进入正在运行的容器内并运行指定command指令|
-  |docker ps|查看正在运行中的容器|
+  |docker ps|查看正在运行中的容器|-a 可以查看有哪些容器运行过 <br>
   |docker start ContaineName/ID|启动指定容器|
   |docker stop ContainerNaem/ID|暂停指定容器|
   |docker restart ContainerName/ID|重启指定容器|
@@ -122,4 +123,27 @@ graph LR
 ## Union FS
 ![image](https://github.com/wangdada-love/docker_exercise/assets/80090934/3ab3091d-67d6-44d2-83cc-aaf82b8e30fa)
 
+# docker使用
+## 获取镜像
 
+```bash
+## dockerhub获取镜像
+docker search ImageName[：tag]    # tag 是镜像版本
+docker pull ImageNamerate[：tag]
+docker images
+# /var/lib/docker/image/overlay2/imagedb/content/sha256/ 记录了镜像和容器的配置关系
+docker run -it --rm ImageNmae[：tag] [Command]   # -it 开启交互式终端， --rm推出容器是删除该容器
+```
+## 查看镜像
+
+```bash
+docker images [ImageName:tag]
+```
+![image](https://github.com/wangdada-love/docker_exercise/assets/80090934/4857e715-f055-4b90-b0e2-227b83198d77)
+
+## 删除镜像
+
+```bash
+docker rmi ImageName[:tag]  # 被删除的镜像不能有历史容器依赖记录 docker ps -a 查看哪些容器运行过，然后docker rm ContainerID 先删除容器依赖记录.
+# 可以指定镜像ID的前三位来删除指定镜像
+```
