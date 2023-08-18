@@ -79,6 +79,7 @@ graph LR
   |docker load ***.tar|将.tar文件加载为Image文件|
   |docker tag||
   |docker run ImageName/ID|运行镜像文件生成容器|-d： 后台运行容器<br>-p： -p 宿主机端口:容器内端口,将宿主机端口映射到容器端口，容器内访问该端口就相当与访问宿主机的对应端口
+  |docker exec [-options] ContainerID command|进入正在运行的容器内并运行指定command指令|
   |docker ps|查看正在运行中的容器|
   |docker start ContaineName/ID|启动指定容器|
   |docker stop ContainerNaem/ID|暂停指定容器|
@@ -96,4 +97,29 @@ graph LR
 
   ### 返回值
     返回一个容器的id。
+  ### 示例
+    docker -d -p 80:80 nginx
+## docker exec
+
+
+  ### 示例
+    docker exec -it xxxxxxxxxxx bash     进入正在运行的ID为xxxxxxxxxxx并运行bash
+# docker层级概念
+![image](https://github.com/wangdada-love/docker_exercise/assets/80090934/82e0002a-eb29-4a80-8f3d-e42585457f91)
+基础镜像提供的是rootfs服务。
+上方的多个子镜像若都利用同样的基础镜像，则不需要将基础镜像复制多份。内存里只需要加载一个基础镜像即可为多个容器服务。即使多个容器共享一个base镜像，某个容器修改了base镜像的内容，其他容器的base镜像的内容也是不会被修改的，修改动作只限制在单个容器内，这就是哦哦那个气的写入时复制特性（copy-on-write）。
+
+当容器启动后，一个新的可写层被加载到镜像的顶部，这一层称为容器层，容器层的下方是只读的镜像层。所有对容器的修改操作都只会在容器层产生变化。
+![image](https://github.com/wangdada-love/docker_exercise/assets/80090934/464140e4-62b2-417c-a9f5-5e64cc46b6eb)
+
+## docker中的文件操作
+|文件操作|说明|
+|:--:|:---|
+|添加文件|在容器中创建文件时，新文件会被添加到容器层中|
+|读取文件|在容器中读取某个文件时，Docker会从上往下依次在各镜像层中查找此文件。一旦找到，立即将其复制到容器层，然后打开并读入内存|
+|修改文件|在容器中修改已经存在的文件时，Docker会从上往下依次在各镜像层中查找此文件，一旦找到，立即将其复制到容器层，然后对其进行修改|
+|删除文件|在容器中删除文件时，Docekr从上往下依次在镜像层中查找此文件，找到后，会在容器层中记录下此删除操作（只记录删除操作）|6
+## Union FS
+![image](https://github.com/wangdada-love/docker_exercise/assets/80090934/3ab3091d-67d6-44d2-83cc-aaf82b8e30fa)
+
 
