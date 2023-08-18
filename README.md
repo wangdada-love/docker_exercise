@@ -74,12 +74,13 @@ graph LR
   |docker commit **containerID**|当本地对容器内进行改变时（如安装了某些软件）即可使用commit命令进行提交，提交之后生成的镜像就是携带着你所安装软件的系统镜像|
   |docker push ImageName/ID|将Image推到dockerhub|
   |docker images/image ls|查看本地镜像|-q 只列出ImageID<br> --format 格式化输出，如：docker images --format "{{.ID}}--{{.Repository}}" 只列出镜像的ID和仓库.中间用双横杠连接<br> --format "table {{.ID}}\t{{.Repository}}\t{{.Tag}}" 以表格形式展示
+  |docker image inspect ImageID（可以是前三位）|查看指定镜像详细信息|
   |docker rmi ImageName/ID|删除指定镜像|
   |docker rm ContainerID|删除容器记录|
   |docker save ImageNaem/ID|将Image文件保存为.tar文件，方便线下内部传播|
   |docker load ***.tar|将.tar文件加载为Image文件|
   |docker tag||
-  |docker run ImageName/ID|运行镜像文件生成容器|-d： 后台运行容器<br>-p： -p 宿主机端口:容器内端口,将宿主机端口映射到容器端口，容器内访问该端口就相当与访问宿主机的对应端口
+  |docker run ImageName/ID Command|运行镜像文件生成容器|-d： 后台运行容器<br>-p： -p 宿主机端口:容器内端口,将宿主机端口映射到容器端口，容器内访问该端口就相当与访问宿主机的对应端口 <br>-it 以交互式方式进入容器 <br> --rm 退出容器时删除该容器
   |docker exec [-options] ContainerID command|进入正在运行的容器内并运行指定command指令|
   |docker ps|查看正在运行中的容器|-a 可以查看有哪些容器运行过 <br>
   |docker start ContaineName/ID|启动指定容器|
@@ -132,7 +133,7 @@ docker search ImageName[：tag]    # tag 是镜像版本
 docker pull ImageNamerate[：tag]
 docker images
 # /var/lib/docker/image/overlay2/imagedb/content/sha256/ 记录了镜像和容器的配置关系
-docker run -it --rm ImageNmae[：tag] [Command]   # -it 开启交互式终端， --rm推出容器是删除该容器
+docker run -it --rm ImageNmae[：tag] [Command]   # -it 开启交互式终端， --rm退出容器时删除该容器
 ```
 ## 查看镜像
 
@@ -146,4 +147,38 @@ docker images [ImageName:tag]
 ```bash
 docker rmi ImageName[:tag]  # 被删除的镜像不能有历史容器依赖记录 docker ps -a 查看哪些容器运行过，然后docker rm ContainerID 先删除容器依赖记录.
 # 可以指定镜像ID的前三位来删除指定镜像
+
+```
+## 镜像管理
+```bash
+docker rmi `docker images -aq` # 批量删除镜像 慎用
+docker rm `docker ps -aq` # 批量删除容器
+
+# 导出镜像，
+# 例如默认运行的centos镜像，不提供vim功能，运行该容器后，在容器内安装vim。然后提交该镜像，再导出该镜像为压缩文件发送给其他人使用。
+docker image save ImageName：tag > save_dir/save_name.tgz
+
+docker commit
+
+# 导入镜像
+docker image load -i save_dir/save_name.tgz
+
+# 查看镜像详细信息
+docker info  # 查看当前机器上运行的docker进程的信息
+docker image inspect ImageID（可以是前三位） # 查看指定镜像的详细信息
+
+```
+## 容器管理
+
+```bash
+# 创建和启动容器
+docker run ... # 若指定容器不存在则会自动下载
+
+## 容器内的进程必须处于前台运行，否则就会直接推出。若运行镜像生成容器时没有运行任何程序，则容器会直接挂掉。
+docker run ImageName:tag bash
+
+## 运行一个活着的容器（docker ps能看到的容器）
+docker run ImageName:tag Command
+
+
 ```
