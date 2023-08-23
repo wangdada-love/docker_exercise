@@ -33,15 +33,7 @@ note of docker learn
 
   ### Images
   镜像是一个只读模板。用于构建容器。
-  可以通过Dockerfile构建，常用指令：
-  |command|mean|
-  |:--:|:---|
-  |FROM|定义基础镜像|
-  |MAINTAINER|作者
-  |RUN|运行Linux指令
-  |ADD|添加文件/目录
-  |ENV|环境变量
-  |CMD|运行进程
+  可以通过Dockerfile构建，
   
 * linux中，docker镜像一般存储位置为：/var/lib/docker
   ### Container
@@ -210,3 +202,34 @@ docker run -P ImageName[:tag] Command  # 例如：docker run -P ImageName[:tag] 
 #4.再运行镜像则自动包含修改的内容
 docker commit Container NewName  # 修改的后的容器会提交为指定名字的新镜像。
 ```
+# Dockerfile
+
+用于构建docker镜像的文件.相当于一个脚本,使用docker自己指令来构建软件依赖、文件依赖、存储等等。
+
+镜像是多层结构，每一层都在前一层的基础上进行修改。容器也是多层存储，以镜像为基础层，在其基础上加一层作为容器运行时的存储层。
+创建镜像有两种方法：
+  1. 手动修改容器内容然后commit
+  2. 通过dockerfile中定义一系列命令和参数构成的脚本，然后这些命令应用于基础镜像，依次添加层，最终生成一个新的镜像，极大简化部署工作。
+
+## 镜像主要组成部分
+1. 基础镜像 FROM ImageName:tag   # 同docker pull效果相同
+2. 制作镜像操作指令 RUN yum install openssh-server -y
+3. 容器启动时执行指令 CMD ["/bin/bash"]
+
+常用指令：
+  |command|mean|options
+  |:--:|:---|:------
+  |FROM|定义基础镜像|
+  |MAINTAINER|作者
+  |RUN|运行Linux指令
+  |ADD|添加文件/目录
+  |ENV|环境变量
+  |CMD|运行进程
+
+
+
+
+
+
+
+
