@@ -80,13 +80,14 @@ graph LR
   |docker save ImageNaem/ID|将Image文件保存为.tar文件，方便线下内部传播|
   |docker load ***.tar|将.tar文件加载为Image文件|
   |docker tag||
-  |docker run ImageName/ID Command|运行镜像文件生成容器|-d： 后台运行容器<br>-p： -p 宿主机端口:容器内端口,将宿主机端口映射到容器端口，容器内访问该端口就相当与访问宿主机的对应端口 <br>-it 以交互式方式进入容器 <br> --rm 退出容器时删除该容器
-  |docker exec [-options] ContainerID command|进入正在运行的容器内并运行指定command指令|
-  |docker ps|查看正在运行中的容器|-a 可以查看有哪些容器运行过 <br>
+  |docker run ImageName/ID Command|运行镜像文件生成容器|-d： 后台运行容器<br>-p： -p 宿主机端口:容器内端口,将宿主机端口映射到容器端口，容器内访问该端口就相当与访问宿主机的对应端口 <br>-it 以交互式方式进入容器 <br> --rm 退出容器时删除该容器对应容器记录 <br> --name 为运行的容器命名<br> -P 随机打开一个本地端口映射到容器内打开的端口
+  |docker exec [-options] ContainerID command|进入正在运行的容器内并运行指定command指令 <br>-it 以交互式方式进入容器|
+  |docker ps|查看正在运行中的容器|-a 可以查看所有容器记录（默认只查看活着的） <br>
   |docker start ContaineName/ID|启动指定容器|
   |docker stop ContainerNaem/ID|暂停指定容器|
   |docker restart ContainerName/ID|重启指定容器|
-  |docker commit ContainerID|在容器内修改后将改动提交到对应Image|
+  |docker commit ContainerID NewName|在容器内修改后将改动提交为指定名字的Image|
+  |docker logs ContainerID|查看指定容器日志|-f 以实时刷新的方式查看日志
 
 
 ## docker run
@@ -150,6 +151,7 @@ docker rmi ImageName[:tag]  # 被删除的镜像不能有历史容器依赖记�
 
 ```
 ## 镜像管理
+
 ```bash
 docker rmi `docker images -aq` # 批量删除镜像 慎用
 docker rm `docker ps -aq` # 批量删除容器
@@ -174,11 +176,37 @@ docker image inspect ImageID（可以是前三位） # 查看指定镜像的详�
 # 创建和启动容器
 docker run ... # 若指定容器不存在则会自动下载
 
-## 容器内的进程必须处于前台运行，否则就会直接推出。若运行镜像生成容器时没有运行任何程序，则容器会直接挂掉。
+## 容器内必须有一个进程处于前台运行，否则就会直接退出。若运行镜像生成容器时没有运行任何程序，则容器会直接挂掉。
 docker run ImageName:tag bash
 
-## 运行一个活着的容器（docker ps能看到的容器）
-docker run ImageName:tag Command
+## 运行一个活着的容器（docker ps能看到的容器）。每执行一次 docker run就会生成一条容器记录，使用docker ps -a可以看到。但是有容器记录的容器并不一定都活着，如果其内部没有运行任何进程就会挂掉。
+docker run ImageName[:tag] [Command]
 
+## 使用-d参数可以让容器在后台运行，不会占用宿主机的交互窗口。会返回一个容器id。
+docker run -d ImageName:tag bash
 
+## 查看容器日志
+docker logs -f ContainerID  # 以实时刷新的方式查看容器日志
+docker logs ContainerID | tail -10 # 查看容器最新的10条日志
+
+## 进入正在运行的容器空间
+docker exec -it ContainerID [Command] # 进入正在运行的容器空间并执行指定命令
+
+## 查看容器的详细信息
+docker container inspect ConatinerID  # 返回容器详细信息，json数据
+
+## 容器端口映射
+docker run -p local_port:container_port ImageName[:tag] [Command]  # 例如：docker run -p 85:80 ImageName[:tag] Command
+## 查看容器端口转发情况
+docker port
+
+## 随机端口映射。随机打开一个本地端口映射到容器内打开的端口。
+docker run -P ImageName[:tag] Command  # 例如：docker run -P ImageName[:tag] [Command]
+
+## 容器提交
+#1.运行基础镜像
+#2.在镜像内进行修改（如安装软件）
+#3.提交修改后的镜像
+#4.再运行镜像则自动包含修改的内容
+docker commit Container NewName  # 修改的后的容器会提交为指定名字的新镜像。
 ```
