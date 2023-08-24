@@ -71,14 +71,14 @@ graph LR
   |docker rm ContainerID|删除容器记录|
   |docker save ImageNaem/ID|将Image文件保存为.tar文件，方便线下内部传播|
   |docker load ***.tar|将.tar文件加载为Image文件|
-  |docker tag||
-  |docker run ImageName/ID Command|运行镜像文件生成容器|-d： 后台运行容器<br>-p： -p 宿主机端口:容器内端口,将宿主机端口映射到容器端口，容器内访问该端口就相当与访问宿主机的对应端口 <br>-it 以交互式方式进入容器 <br> --rm 退出容器时删除该容器对应容器记录 <br> --name 为运行的容器命名<br> -P 随机打开一个本地端口映射到容器内打开的端口
+  |docker tag ImageID ImageName|指定ID修改名字|
+  |docker run ImageName/ID Command|运行镜像文件生成容器|-d： 后台运行容器<br>-p： -p 宿主机端口:容器内端口,将宿主机端口映射到容器端口，容器内访问该端口就相当与访问宿主机的对应端口 <br>-it 以交互式方式进入容器 <br> --rm 退出容器时删除该容器对应容器记录 <br> --name 为运行的容器命名<br> -P 随机打开一个本地端口映射到容器内打开的端口<br>-v 数据目录映射
   |docker exec [-options] ContainerID command|进入正在运行的容器内并运行指定command指令 <br>-it 以交互式方式进入容器|
   |docker ps|查看正在运行中的容器|-a 可以查看所有容器记录（默认只查看活着的） <br>
   |docker start ContaineName/ID|启动指定容器|
   |docker stop ContainerNaem/ID|暂停指定容器|
   |docker restart ContainerName/ID|重启指定容器|
-  |docker commit ContainerID NewName|在容器内修改后将改动提交为指定名字的Image|
+  |docker commit ContainerID NewName|在容器内修改后将改动提交为指定名字的Image| 
   |docker logs ContainerID|查看指定容器日志|-f 以实时刷新的方式查看日志
 
 
@@ -216,17 +216,28 @@ docker commit Container NewName  # 修改的后的容器会提交为指定名字
 2. 制作镜像操作指令 RUN yum install openssh-server -y
 3. 容器启动时执行指令 CMD ["/bin/bash"]
 
-常用指令：
-  |command|mean|options
+## 常用指令：
+  |command|mean|notes
   |:--:|:---|:------
   |FROM|定义基础镜像|
-  |MAINTAINER|作者
-  |RUN|运行Linux指令
-  |ADD|添加文件/目录
-  |ENV|环境变量
-  |CMD|运行进程
-
-
+  |MAINTAINER|作者|
+  |RUN|运行Linux指令|
+  |ADD|添加文件/目录|
+  |COPY|同ADD，都是拷贝宿主机文件到容器内，不过ADD多了自动解压的功能|COPY local_files ImageDir, 保留宿主机文件的元数据，如权限、访问时间。<br>支持获取url，若目标文件时url路径 ，会自动下载该链接并放入目标路径，权限自动设置为600，可在后面跟RUN命令进行修改权限等操作。
+  |WORKDIR|设置当前工作目录， 相当于cd命令|
+  |VOLUME|设置卷，挂在主机目录|VOLUME ["DIR1", "DIR2"...],指定目录自动与宿主机建立映射关系
+  |EXPOSE|指定对外端口，在容器内暴露一个窗口|
+  |ENV|环境变量，容器运行时也起作用|
+  |ARG|用于构建容器时设置变量，容器运行时不起作用|
+  |CMD|运行进程|CMD ["arg1", "arg2"...],镜像运行时默认执行的文件名称或命令。<br>如果docker run时指定了需要执行的命令，则会覆盖该命令后的指令。
+  |ENTRYPOINT|容器启动后执行的命令，与CMD作用相同。但是如果同时使用了CMD和ENTRYPOINT,则会把CMD的内容传递给ENTRYPOINT，也可以在docker run的时候直接传参数。 |
+构建完Dockerfile后，在其所在目录下运行**docker build .** 即可生成镜像
+## 示例
+1. 构建ubuntu容器，且运行后打印“hello docker”
+```text
+FROM ubuntu
+RUN echo “hello docker”
+```
 
 
 
