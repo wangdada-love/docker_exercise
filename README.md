@@ -60,7 +60,7 @@ graph LR
 
   |command|mean|options
   |:--:|:---|:-----------------
-  |docker build .|使用Dockerfile构建镜像|
+  |docker build [options] .|使用Dockerfile构建镜像|-t "Name" 设置构建后镜像的名字<br>--no-cache 不采用本地缓存镜像层，全部重新下载构建
   |docker search ImageName|从dockerhub中查找包含指定名字的镜像|
   |docker pull ImageName|从docker hub拉取指定镜像|
   |docker commit **containerID**|当本地对容器内进行改变时（如安装了某些软件）即可使用commit命令进行提交，提交之后生成的镜像就是携带着你所安装软件的系统镜像|
@@ -68,18 +68,23 @@ graph LR
   |docker images/image ls|查看本地镜像|-q 只列出ImageID<br> --format 格式化输出，如：docker images --format "{{.ID}}--{{.Repository}}" 只列出镜像的ID和仓库.中间用双横杠连接<br> --format "table {{.ID}}\t{{.Repository}}\t{{.Tag}}" 以表格形式展示
   |docker image inspect ImageID（可以是前三位）|查看指定镜像详细信息|
   |docker rmi ImageName/ID|删除指定镜像|
-  |docker rm ContainerID|删除容器记录|
+  |docker rm ContainerID|删除容器记录|-f 强制删除
   |docker save ImageNaem/ID|将Image文件保存为.tar文件，方便线下内部传播|
   |docker load ***.tar|将.tar文件加载为Image文件|
   |docker tag ImageID ImageName|指定ID修改名字|
-  |docker run ImageName/ID Command|运行镜像文件生成容器|-d： 后台运行容器<br>-p： -p 宿主机端口:容器内端口,将宿主机端口映射到容器端口，容器内访问该端口就相当与访问宿主机的对应端口 <br>-it 以交互式方式进入容器 <br> --rm 退出容器时删除该容器对应容器记录 <br> --name 为运行的容器命名<br> -P 随机打开一个本地端口映射到容器内打开的端口<br>-v 数据目录映射
+  |docker run ImageName/ID Command|运行镜像文件生成容器|-d： 后台运行容器<br>-p： -p 宿主机端口:容器内端口,将宿主机端口映射到容器端口，容器内访问该端口就相当与访问宿主机的对应端口 <br>-it 以交互式方式进入容器 <br> --rm 退出容器时删除该容器对应容器记录 <br> --name 为运行的容器命名<br> -P 随机打开一个本地端口映射到容器内打开的端口<br>-v 数据目录映射<br>--name 指定运行容器的名字<br>--restart [always] 当容器意外关闭时选择其重启方式
   |docker exec [-options] ContainerID command|进入正在运行的容器内并运行指定command指令 <br>-it 以交互式方式进入容器|
-  |docker ps|查看正在运行中的容器|-a 可以查看所有容器记录（默认只查看活着的） <br>
   |docker start ContaineName/ID|启动指定容器|
   |docker stop ContainerNaem/ID|暂停指定容器|
   |docker restart ContainerName/ID|重启指定容器|
   |docker commit ContainerID NewName|在容器内修改后将改动提交为指定名字的Image| 
   |docker logs ContainerID|查看指定容器日志|-f 以实时刷新的方式查看日志
+  |docker port|查看容器都有哪些端口|
+  |docker ps|查看正在运行中的容器|-a 可以查看所有容器记录（默认只查看活着的） <br>
+  |docker container ls|等同于docker ps -a|
+  |docker top ContinerID|查看容器内运行的资源管理|
+  |docker stats ContainerID|查看容器内资源|
+  |docker inspect ContainerID|查看容器详细信息|--format 同上面docker images用法相同
 
 
 ## docker run
@@ -189,6 +194,7 @@ docker container inspect ConatinerID  # 返回容器详细信息，json数据
 
 ## 容器端口映射
 docker run -p local_port:container_port ImageName[:tag] [Command]  # 例如：docker run -p 85:80 ImageName[:tag] Command
+
 ## 查看容器端口转发情况
 docker port
 
@@ -196,10 +202,10 @@ docker port
 docker run -P ImageName[:tag] Command  # 例如：docker run -P ImageName[:tag] [Command]
 
 ## 容器提交
-#1.运行基础镜像
-#2.在镜像内进行修改（如安装软件）
-#3.提交修改后的镜像
-#4.再运行镜像则自动包含修改的内容
+*1.运行基础镜像
+*2.在镜像内进行修改（如安装软件）
+*3.提交修改后的镜像
+*4.再运行镜像则自动包含修改的内容
 docker commit Container NewName  # 修改的后的容器会提交为指定名字的新镜像。
 ```
 # Dockerfile
@@ -226,11 +232,12 @@ docker commit Container NewName  # 修改的后的容器会提交为指定名字
   |COPY|同ADD，都是拷贝宿主机文件到容器内，不过ADD多了自动解压的功能|COPY local_files ImageDir, 保留宿主机文件的元数据，如权限、访问时间。<br>支持获取url，若目标文件时url路径 ，会自动下载该链接并放入目标路径，权限自动设置为600，可在后面跟RUN命令进行修改权限等操作。
   |WORKDIR|设置当前工作目录， 相当于cd命令|
   |VOLUME|设置卷，挂在主机目录|VOLUME ["DIR1", "DIR2"...],指定目录自动与宿主机建立映射关系
-  |EXPOSE|指定对外端口，在容器内暴露一个窗口|
+  |EXPOSE|指定对外端口，在容器内暴露一个窗口|帮助使用该镜像的人快速理解该容器的端口业务<br> docker port 容器 查看打开了什么端口<br>相关指令：<br>docker run -p local_port:container_port <br>docker -P rand_local_port:container_port
   |ENV|环境变量，容器运行时也起作用|
   |ARG|用于构建容器时设置变量，容器运行时不起作用|
   |CMD|运行进程|CMD ["arg1", "arg2"...],镜像运行时默认执行的文件名称或命令。<br>如果docker run时指定了需要执行的命令，则会覆盖该命令后的指令。
   |ENTRYPOINT|容器启动后执行的命令，与CMD作用相同。但是如果同时使用了CMD和ENTRYPOINT,则会把CMD的内容传递给ENTRYPOINT，也可以在docker run的时候直接传参数。 |
+  |USER|用于改变环境、切换用户|USER UserName 设定后续操作用哪个用户进行
 构建完Dockerfile后，在其所在目录下运行**docker build .** 即可生成镜像
 ## 示例
 1. 构建ubuntu容器，且运行后打印“hello docker”
