@@ -51,7 +51,7 @@ graph LR
   file[Dockerfile] --build--> image[images]
   image --run---> con[containers]  
   image --save--->tar[backup.tar]
-  tar -.>load-.>image
+  tar -.>load.->image
   image --push--->hub[docker registry]
   image--tag--->image
   con -.commit.->image
